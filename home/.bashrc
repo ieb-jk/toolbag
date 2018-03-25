@@ -1,8 +1,18 @@
 # .bashrc
 
-set -o vi
-#export EDITOR=vim MYVIMRC/$HOME/.vimc
-#export Tok=1234
+echo "Running .bashrc"
 
-#alias docClean="docker stop \$(docker ps -qa) && docker rm \$(docker ps -qa)"
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+set -o vi
+
+#export EDITOR=vim MYVIMRC=$HOME/.vimc
+#export Tok=
+
+[ $(echo $PATH | grep "data\/bin") ] || export PATH=$PATH:.:~/data/bin
+
+alias docClean="docker stop \$(docker ps -qa) && docker rm \$(docker ps -qa)"
 
