@@ -34,3 +34,37 @@ pipeline {
         }
     }
 }
+
+def gitURL() {
+    sh "git config --get remote.origin.url > .git/giturl"
+    return readFile(".git/giturl").trim()
+}
+
+def getSHA() {
+    sh "git rev-parse origin/${env.BRANCH_NAME} > .git/lastcommit"
+    return readFile(".git/lastcommit").trim()
+}
+
+
+// SlackNotifier
+def slackit(color, message, channel) {
+    slackSend channel: channel, teamDomain: 'IEB-ITCrowd', token: '99999999999999999999', color: color, message: '<' + env.BUILD_URL + '|[' + env.JOB_NAME + ' build ' + env.BUILD_NUMBER + ']>\n' + message
+}
+
+
+// Build Status Stuff
+void buildStatus(String context, String message, String state) {
+    buildStatus(context, message, state, gitURL(), getSHA());
+}
+
+void buildStatus(String context, String message, String state, url, commitSha) {
+    step([
+        $class : "GitHubCommitStatusSetter",
+        reposSource : [$class: "ManuallyEnteredRepositorySource", url: url],
+        commitShaSource : [$class: "ManuallyEnteredShaSource", sha: commitSha],
+        contextSource : [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/$context"],
+        errorHandlers : [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+        statusResultSource: [$class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]]]
+        ]);
+}
+
