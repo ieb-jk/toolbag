@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checkout Branch not a PR'
+                echo 'Checkout Branch ${env.BRANCH_NAME}'
             }
         }
 
