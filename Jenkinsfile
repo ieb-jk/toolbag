@@ -4,9 +4,9 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkouty') {
+        stage('Checkout') {
             steps {
-                echo 'Checkout PR'
+                echo 'Checkout Branch'
             }
         }
 
