@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checkout Branch'
+                echo 'Checkout Branch not a PR'
             }
         }
 
